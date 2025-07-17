@@ -1,37 +1,48 @@
 // import { Fragment } from "react/jsx-runtime";
-import { MouseEvent } from "react";
-function ListGroup() {
-  let items = ["Nairobi", "Mombasa", "Nakuru", "Naivasha", "Ngong"];
-  // items = [];
-  const handleClick = (event: MouseEvent) => console.log(event);
-  // items.map((item) => <li>{item}</li>);
+interface ListGroupProps {
+  items: string[];
+  heading: string;
+  //(item:string) => void
+  onSelectItem: (item: string) => void;
+}
 
-  // if (items.length === 0) {
-  //   return (
-  //     <>
-  //       <h1>List</h1>
-  //       <p>No item Found</p>
-  //     </>
-  //   );
-  // }
+import { useState } from "react";
+
+// import { MouseEvent } from "react";
+function ListGroup(props: ListGroupProps) {
+  // let selectedIndex = 0;
+
+  //Hook
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+  // const [name, setName] = useState('');
+
+  let li_class_name = "list-group-item";
+  let li_class_name_active = "list-group-item active";
+
+  // const handleClick = (event: MouseEvent) => console.log(event);
+  // items.map((item) => <li>{item}</li>);
 
   // const message = items.length === 0 ? <p> No item found</p> : null
   return (
     <>
-      <h1>List</h1>
+      <h1>{props.heading}</h1>
       {/* {message} */}
-      {items.length === 0 && <p>No item Found</p>}
+      {props.items.length === 0 && <p>No item Found</p>}
       <ul className="list-group">
-        {items.map((item, index) => (
-          <li key={item} className="list-group-item" onClick={handleClick}>
+        {props.items.map((item, index) => (
+          <li
+            key={item}
+            className={
+              selectedIndex === index ? li_class_name_active : li_class_name
+            }
+            onClick={() => {
+              setSelectedIndex(index);
+              props.onSelectItem(item);
+            }}
+          >
             {item}
           </li>
         ))}
-        {/* <li className="list-group-item">An item</li>
-                <li className="list-group-item">A second item</li>
-                <li className="list-group-item">A third item</li>
-                <li className="list-group-item">A fourth item</li>
-                <li className="list-group-item">And a fifth one</li> */}
       </ul>
     </>
   );
